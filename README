@@ -1,0 +1,2 @@
+Requires SimpleXML. Basically converts the DeviantArt RSS feed into a
+series of objects that you can use more freely elsewhere.
