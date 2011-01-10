@@ -8,7 +8,10 @@ require_once 'DeviantFeed.php';
 require_once 'DeviantFile.php';
 require_once 'DeviantItem.php';
 require_once 'DeviantRights.php';
+require_once '../mustache.php/Mustache.php';
 
-$foo = new DeviantFeed();
-$foo->loadFeed(DEVIANT_FEED);
-print_r($foo);
+$template = file_get_contents('template.mustache');
+$view = new DeviantFeed();
+$view->loadFeed(DEVIANT_FEED);
+$m = new Mustache();
+die($m->render($template,$view));

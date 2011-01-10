@@ -11,6 +11,7 @@ class DeviantItem {
 	public $rating = 'nonadult';
 	public $rights = false;
 	public $files = Array();
+	public $descriptionRegex = '/(<br \/><div><img[^?]*><\/div>\s+)$/';
 	
 	function __construct($params){
 		if(gettype($params) == 'object'){
@@ -26,12 +27,18 @@ class DeviantItem {
 		}
 	}
 	
+	function setDescription($description){
+		$description = preg_replace($this->descriptionRegex,'',(String)$description);
+		$this->description = $description;
+		
+	}
+	
 	function loadFromSimpleXml($xml){
 		// Load the standard fields
 		$this->title = (String)$xml->title;
 		$this->link = (String)$xml->link;
 		$this->pubdate = (String)$xml->pubDate;
-		$this->description = (String)$xml->description;
+		$this->setDescription($xml->description);
 		
 		// Load the various namespaces.
 		$media = $xml->children('media',true);
@@ -44,8 +51,8 @@ class DeviantItem {
 		$this->rights->setRightsUri($creativeCommons->license);
 		$this->rights->setAttributionUri($media->copyright->attributes());
 		
-		$this->indexFiles($xml->content);
-		$this->indexFiles($xml->thumbnail);
+		$this->indexFiles($media->content);
+		$this->indexFiles($media->thumbnail);
 			
 	}
 	
